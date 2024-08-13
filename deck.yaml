@@ -1,0 +1,245 @@
+_format_version: "3.0"
+_workspace: default
+ca_certificates:
+- cert: |-
+    -----BEGIN CERTIFICATE-----
+    MIID/zCCAuegAwIBAgIUGSp8pgKRxMmRiGlLFjeZ8eLTDb4wDQYJKoZIhvcNAQEL
+    BQAwgY4xCzAJBgNVBAYTAklOMQswCQYDVQQIDAJURzEMMAoGA1UEBwwDSFlEMQ0w
+    CwYDVQQKDARLT05HMQ0wCwYDVQQLDARLT05HMRcwFQYDVQQDDA4qLmxvY2Fob3N0
+    LmNvbTEtMCsGCSqGSIb3DQEJARYec3VyZXNoa3VtYXJtYWRhcGF0aGlAZ21haWwu
+    Y29tMB4XDTI0MDQxODA1NDI1OVoXDTI1MDQxODA1NDI1OVowgY4xCzAJBgNVBAYT
+    AklOMQswCQYDVQQIDAJURzEMMAoGA1UEBwwDSFlEMQ0wCwYDVQQKDARLT05HMQ0w
+    CwYDVQQLDARLT05HMRcwFQYDVQQDDA4qLmxvY2Fob3N0LmNvbTEtMCsGCSqGSIb3
+    DQEJARYec3VyZXNoa3VtYXJtYWRhcGF0aGlAZ21haWwuY29tMIIBIjANBgkqhkiG
+    9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqaBHBbWnGFCr/W6/f/yiPJ/zP/mCFzWYfwQ7
+    YRj2SGbcHytJf7AgKpGlHxQgDRn9sTz///Ojvb2uwbdiJKVFa8qSmfTEPRSO5U7g
+    iEkPrnOCJJ7qS3cdkfne76x1Koj21qvt7p7Pgv8sTfCsPA8iTP31edpbghoF5XDo
+    UTImFuS+nvCMif4ZKEFA0x7PljSTpMqY02sw0uWhNf4GU49c6356A0lLOimRdhUz
+    xZy57dhoU64zBBoCRbOS0NiKEjjLLSMKqGDC0s/p9u8zE5s6QiMJPeu5eI+QbIdx
+    i2UFE725EPya1v0x6NVPhcdX1/1jBDG+AQZF79CXltztKRuFgQIDAQABo1MwUTAd
+    BgNVHQ4EFgQUIUA4eJi1/RTvuI7cHaKEvygvqn4wHwYDVR0jBBgwFoAUIUA4eJi1
+    /RTvuI7cHaKEvygvqn4wDwYDVR0TAQH/BAUwAwEB/zANBgkqhkiG9w0BAQsFAAOC
+    AQEAOTMGmbi42uoaJ9bFLZZI26+QRj5omBzht15GxGzPn1NP0a8lyaOQtv2hFQK+
+    rpGqK1ZIUpoxmiMRQDPaAmZS9/oKY92EQTeFI9FeT07h48bfuo2OaZMQlabsLR59
+    ePlBqsq6xW/9veoZfKRP3M4RYkKRdYwhvDrm4o66i+zQdsIBSgE2+fQJ05b3KtIE
+    deG1Fn+G9Ru69V8R8mU6BsM0US9XF77IjmjYKeFRUnTpyAlG6POC4DkVp+0ewOPu
+    U3oJRrp7fsO5CqB8KsQjR3fdGHksRF9wLTxZzw4Tn2g8nYZk48bopLYW+ntq05Um
+    0PDvVPOhfWRSRfi4tdC3qRaeCA==
+    -----END CERTIFICATE-----
+  cert_digest: e9ae7a825b5ef00014d9c200e9790c5de9818017ca8f1ed8ec9ae0eef818b456
+  id: aab37a66-dd1a-4307-9e23-11ac94c53229
+  tags:
+  - ca cert
+consumers:
+- username: '*.localhost.com'
+plugins:
+- config:
+    bandwidth_metrics: true
+    latency_metrics: true
+    per_consumer: true
+    status_code_metrics: true
+    upstream_health_metrics: true
+  enabled: true
+  name: prometheus
+  protocols:
+  - grpc
+  - grpcs
+  - http
+  - https
+services:
+- connect_timeout: 60000
+  enabled: true
+  host: httpbin.org
+  name: Testing1_New
+  path: /get
+  port: 443
+  protocol: http
+  read_timeout: 60000
+  retries: 20
+  routes:
+  - hosts:
+    - localhost:8000
+    https_redirect_status_code: 426
+    name: Testing1_routeNew
+    path_handling: v0
+    paths:
+    - /deck_testing
+    preserve_host: false
+    protocols:
+    - http
+    - https
+    regex_priority: 0
+    request_buffering: true
+    response_buffering: true
+    strip_path: true
+  write_timeout: 60000
+- connect_timeout: 60000
+  enabled: true
+  host: httpbin.org
+  name: httpbin
+  path: /anything
+  port: 80
+  protocol: http
+  read_timeout: 60000
+  retries: 5
+  routes:
+  - https_redirect_status_code: 426
+    name: myfirstRoute
+    path_handling: v0
+    paths:
+    - /requestByheader
+    plugins:
+    - config:
+        rules:
+        - condition:
+            version: v2
+          upstream_name: httpbin2.org
+      enabled: false
+      name: route-by-header
+      protocols:
+      - grpc
+      - grpcs
+      - http
+      - https
+    - config:
+        escape_path: false
+        host: $(headers.mytarget)
+        path: null
+        port: null
+      enabled: true
+      name: route-transformer-advanced
+      protocols:
+      - grpc
+      - grpcs
+      - http
+      - https
+    preserve_host: false
+    protocols:
+    - http
+    - https
+    regex_priority: 0
+    request_buffering: true
+    response_buffering: true
+    strip_path: true
+  - https_redirect_status_code: 426
+    methods:
+    - GET
+    - PUT
+    name: mysecondRoute
+    path_handling: v0
+    paths:
+    - ~/requestByUri/(?<target>\w+)
+    plugins:
+    - config:
+        custom_fields_by_lua: {}
+        path: /dev/stdout
+        reopen: false
+      enabled: true
+      name: file-log
+      protocols:
+      - grpc
+      - grpcs
+      - http
+      - https
+    - config:
+        escape_path: false
+        host: null
+        path: $(uri_captures['target'])
+        port: null
+      enabled: true
+      name: route-transformer-advanced
+      protocols:
+      - grpc
+      - grpcs
+      - http
+      - https
+    preserve_host: false
+    protocols:
+    - http
+    regex_priority: 0
+    request_buffering: true
+    response_buffering: true
+    strip_path: true
+  write_timeout: 60000
+- connect_timeout: 60000
+  enabled: true
+  host: sample.nginx.svc.cluster.local
+  name: nginx-service
+  port: 80
+  protocol: http
+  read_timeout: 60000
+  retries: 5
+  routes:
+  - https_redirect_status_code: 426
+    methods:
+    - GET
+    - PUT
+    - POST
+    - PATCH
+    name: nginx-service-route
+    path_handling: v1
+    paths:
+    - ~/demo/$(\d+)
+    preserve_host: false
+    protocols:
+    - http
+    - https
+    regex_priority: 0
+    request_buffering: true
+    response_buffering: true
+    strip_path: true
+  write_timeout: 60000
+- connect_timeout: 60000
+  enabled: true
+  host: httpbin.org
+  name: paymentservice
+  plugins:
+  - config:
+      allow_partial_chain: false
+      anonymous: null
+      authenticated_group_by: CN
+      ca_certificates:
+      - aab37a66-dd1a-4307-9e23-11ac94c53229
+      cache_ttl: 60
+      cert_cache_ttl: 60000
+      consumer_by:
+      - username
+      - custom_id
+      http_proxy_host: null
+      http_proxy_port: null
+      http_timeout: 30000
+      https_proxy_host: null
+      https_proxy_port: null
+      revocation_check_mode: IGNORE_CA_ERROR
+      send_ca_dn: false
+      skip_consumer_lookup: false
+    enabled: true
+    name: mtls-auth
+    protocols:
+    - grpc
+    - grpcs
+    - http
+    - https
+  port: 443
+  protocol: https
+  read_timeout: 60000
+  retries: 5
+  routes:
+  - https_redirect_status_code: 426
+    methods:
+    - GET
+    - PUT
+    - POST
+    - PATCH
+    name: mock-route
+    path_handling: v0
+    paths:
+    - /mock
+    preserve_host: false
+    protocols:
+    - https
+    regex_priority: 0
+    request_buffering: true
+    response_buffering: true
+    strip_path: true
+  write_timeout: 60000
