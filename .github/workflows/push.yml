@@ -1,0 +1,14 @@
+name: Run Deck
+on: push
+jobs:
+ deck-sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Deck
+        uses: kong/setup-deck@v1
+        with:
+           deck-version: "1.8.0"
+      - name: clone-repo
+        uses: actions/checkout@v2
+      - name: runn deck synch
+        run: deck sync --kong-addr http://localhost:8001/ ./deck.yaml
