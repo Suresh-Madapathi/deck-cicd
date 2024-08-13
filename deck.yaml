@@ -50,7 +50,7 @@ services:
 - connect_timeout: 60000
   enabled: true
   host: httpbin.org
-  name: Testing1_New
+  name: Testing1_New_changed
   path: /get
   port: 443
   protocol: http
@@ -60,7 +60,7 @@ services:
   - hosts:
     - localhost:8000
     https_redirect_status_code: 426
-    name: Testing1_routeNew
+    name: Testing1_routeNew_Changed
     path_handling: v0
     paths:
     - /deck_testing
