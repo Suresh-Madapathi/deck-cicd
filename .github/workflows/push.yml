@@ -10,5 +10,5 @@ jobs:
            deck-version: "1.8.0"
       - name: clone-repo
         uses: actions/checkout@v2
-      - name: runn deck synch
+      - name: run deck synch
         run: deck gateway ping --kong-addr http://localhost:8001/
