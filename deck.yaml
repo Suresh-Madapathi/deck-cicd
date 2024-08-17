@@ -55,7 +55,7 @@ services:
   port: 443
   protocol: http
   read_timeout: 60000
-  retries: 20
+  retries: 5
   routes:
   - hosts:
     - localhost:8000
