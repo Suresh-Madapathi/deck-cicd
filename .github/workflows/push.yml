@@ -19,4 +19,4 @@ jobs:
 
     - name: Configure Kong via decK
       run: |
-        deck gateway ping --kong-addr http://localhost:8001/
+        deck gateway ping --kong-addr http://localhost:31826/
