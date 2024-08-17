@@ -10,17 +10,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Setup Deck
+      uses: kong/setup-deck@v1
+      with:
+        deck-version: "v1.38.1"
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Install dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y curl unzip
-        curl -sL https://github.com/kong/deck/releases/latest/download/deck_linux_amd64.tar.gz | tar xz
-        sudo mv deck /usr/local/bin/
-
     - name: Configure Kong via decK
       run: |
-        deck ping --kong-addr http://<Node_IP>:32001/
-        deck sync --kong-addr http://<Node_IP>:32001/ --state kong.yaml
+        deck ping --kong-addr http://localhost:8001/
