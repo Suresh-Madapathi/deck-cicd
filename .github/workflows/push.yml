@@ -11,4 +11,4 @@ jobs:
       - name: clone-repo
         uses: actions/checkout@v2
       - name: run deck synch
-        run: deck ping --kong-addr http://192.168.25.31:8001/
+        run: deck ping --kong-addr http://192.168.25.31:8001/ --timeout 30s
