@@ -1,14 +1,26 @@
-name: Run Deck
-on: push
+name: Deploy to Kong Gateway
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
- deck-sync:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Setup Deck
-        uses: kong/setup-deck@v1
-        with:
-           deck-version: "1.8.0"
-      - name: clone-repo
-        uses: actions/checkout@v2
-      - name: run deck synch
-        run: deck ping --kong-addr http://192.168.25.31:8001/ --timeout 30s
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y curl unzip
+        curl -sL https://github.com/kong/deck/releases/latest/download/deck_linux_amd64.tar.gz | tar xz
+        sudo mv deck /usr/local/bin/
+
+    - name: Configure Kong via decK
+      run: |
+        deck ping --kong-addr http://<Node_IP>:32001/
+        deck sync --kong-addr http://<Node_IP>:32001/ --state kong.yaml
